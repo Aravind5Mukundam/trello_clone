@@ -324,7 +324,7 @@ export default function BoardPage() {
   const [newColumnTitle, setNewColumnTitle] = useState("");
   const [editingColumnTitle, setEditingColumnTitle] = useState("");
   const [editingColumn, setEditingColumn] = useState<ColumnWithTasks | null>(
-    
+    null
   );
 
   const [filters, setFilters] = useState({
@@ -515,7 +515,7 @@ export default function BoardPage() {
     e.preventDefault();
     if (!editingColumnTitle.trim()) return;
 
-    await updateColumn(editingColumn.id, editingColumnTitle.trim());
+    await updateColumn(editingColumn!.id, editingColumnTitle.trim());
 
     setEditingColumnTitle("");
     setIsEditingColumn(false);
