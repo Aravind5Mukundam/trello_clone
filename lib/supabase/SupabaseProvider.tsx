@@ -21,23 +21,31 @@ export default function SupabaseProvide({
 }:{
     children: React.ReactNode;
 }){
-    const {session} = useSession();
+    const {session, isLoaded: isSessionLoaded} = useSession();
     const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect(()=>{
-        if(!session) return;
+        if (!isSessionLoaded) return;
+
+        if (!session) {
+            setSupabase(null);
+            setIsLoaded(true);
+            return;
+        }
+
+        setIsLoaded(false);
         const client = createClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
       {
-        accessToken: () => session?.getToken(),
+        accessToken: async () => session.getToken(),
       }
         );
 
         setSupabase(client);
         setIsLoaded(true);
-    },[session])
+    },[session, isSessionLoaded])
 
     return (
         <Context.Provider value={{supabase, isLoaded}} >

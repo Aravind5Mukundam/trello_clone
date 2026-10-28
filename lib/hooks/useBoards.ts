@@ -13,24 +13,30 @@ import { useSupabase } from "../supabase/SupabaseProvider";
 
 
 export function useBoards() {
-  const { user } = useUser();
-  const { supabase } = useSupabase();
+  const { user, isLoaded: isUserLoaded } = useUser();
+  const { supabase, isLoaded: isSupabaseLoaded } = useSupabase();
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user) {
-      loadBoards();
+    if (!isUserLoaded || !isSupabaseLoaded) return;
+
+    if (!user || !supabase) {
+      setBoards([]);
+      setLoading(false);
+      return;
     }
-  }, [user, supabase]);
+
+    void loadBoards();
+  }, [user, supabase, isUserLoaded, isSupabaseLoaded]);
 
   async function loadBoards() {
-    if (!user) return;
+    if (!user || !supabase) return;
     try {
       setLoading(true);
       setError(null);
-      const data = await boardService.getBoards(supabase!, user.id);
+      const data = await boardService.getBoards(supabase, user.id);
       setBoards(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load boards");
@@ -71,11 +77,6 @@ export function useBoard(boardId: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (boardId) {
-      loadBoard();
-    }
-  }, [boardId, supabase]);
 
 
   async function loadBoard() {
@@ -96,6 +97,11 @@ export function useBoard(boardId: string) {
       setLoading(false);
     }
   }
+  useEffect(() => {
+    if (boardId) {
+      loadBoard();
+    }
+  }, [boardId, supabase,loadBoard]);
 
   async function updateBoard(boardId: string, updates: Partial<Board>) {
     try {

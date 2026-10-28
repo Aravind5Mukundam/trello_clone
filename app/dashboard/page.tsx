@@ -32,7 +32,7 @@ import { Label } from "@/components/ui/label";
 
 export default function DashboardPage() {
   const { user } = useUser();
-  const { createBoard, boards, loading, error } = useBoards();
+  const { createBoard, boards, error } = useBoards();
   
   const router = useRouter();
   const { isFreeUser } = usePlan();
@@ -102,7 +102,7 @@ export default function DashboardPage() {
   if (error) {
     return (
       <div>
-        <h2> Error loading boards</h2>
+        {/* <h2> Error loading boards</h2> */}
         <p>{error}</p>
       </div>
     );
