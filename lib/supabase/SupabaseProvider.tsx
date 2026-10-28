@@ -3,7 +3,7 @@
 import { useSession } from "@clerk/nextjs";
 import { createContext, useContext, useEffect, useState } from "react";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { Exo } from "next/font/google";
+// import { Exo } from "next/font/google";
 
 type SupabaseContext = {
     supabase : SupabaseClient | null;
@@ -29,7 +29,8 @@ export default function SupabaseProvide({
         if(!session) return;
         const client = createClient(
             process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,{
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+      {
         accessToken: () => session?.getToken(),
       }
         );
