@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import {ClerkProvider} from "@clerk/nextjs";
-// @ts-expect-error Next.js processes global CSS imports at build time.
 import "./globals.css";
 import SupabaseProvider from "@/lib/supabase/SupabaseProvider";
 
